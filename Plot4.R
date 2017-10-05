@@ -1,4 +1,20 @@
+library(data.table)
+Data <- fread("household_power_consumption.txt", sep = ";" , stringsAsFactors = F, 
+              na.strings = "?")
+str(Data) #look at the structure of Data table
+names(Data) #look at column names
 
+#subset the data
+Needed <- subset(Data, Date %in% c( "1/2/2007" ,"2/2/2007"))
+Needed$Date <- as.Date(Needed$Date, "%d/%m/%Y")
+head(Needed)#Look at first 5 rows
+ #SetTime
+
+SetTime <-strptime(paste(Needed$Date, Needed$Time, sep=" "),"%d/%m/%Y %H:%M:%S")
+FinalData <- cbind(Needed, SetTime)
+head(FinalData) #look at 5 rows
+str(FinalData)# structure of Dataset
+# PLOT 4
 par(mfrow=c(2,2), mar=c(4,4,2,1), oma=c(0,0,2,0))
 with(FinalData, {
   plot(Global_active_power~SetTime, type="l", 
